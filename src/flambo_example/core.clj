@@ -52,7 +52,6 @@
         (log/info "Metadata for " x " is " (metadata->str metadata))))))
 
 ;;; ------------ spark ------------
-
 ;; Spark的消息接收Receiver监听器, onStart监听开始的回调, future是等待执行返回, onStop监听结束的回调
 ;; (def f (future (Thread/sleep 10000) (println "done") 100)) ;;=> @f done 100
 (defn num-range-receiver
@@ -82,30 +81,33 @@
 ;; 消息生产: 消息推送到Kafka, rdd格式数据, 并把(->callback x)传给Kafka
 (api/defsparkfn publish [rdd _]
   (doseq [x (.collect rdd)]
-    (log/info (str "Sending to Kafka fizzbuzz " x))
+    (log/info (str "====>>> Sending to Kafka fizzbuzz " x " , " (type x)))
     (send! @producer "fizzbuzz" x (->callback x))))
 
 ;; partitions模式
 (api/defsparkfn publish-using-partitions [rdd _]
-  (.foreachPartition rdd
-    (function/void-function
-      (api/fn [xs]
-        (doseq [x (iterator-seq xs)]
-          (log/info (str "Sending to Kafka fizzbuzz " x))
-          (send! (memoized-producer producer-config) "fizzbuzz" x (->callback x)))))))
+  (.foreachPartition
+   rdd
+   (function/void-function
+    (api/fn [xs]
+      (doseq [x (iterator-seq xs)]
+        (log/info (str "---->>> Sending to Kafka fizzbuzz " x " , " (type x) ))
+        (send! (memoized-producer producer-config) "fizzbuzz" x (->callback x)))))))
 
 (def env {"spark.executor.memory" "1G"
           "spark.files.overwrite" "true"})
+
+(def c (-> (conf/spark-conf)
+           (conf/master "local[*]")
+           (conf/app-name "flambo-custom-receiver-kafka-eample")
+           (conf/set "spark.akka.timeout" "1000")
+           (conf/set-executor-env env)))
 
 ;; [& [n]]接受来自spark-submit命令的参数
 (defn -main [& [n]]
   (log/info "Starting!")
   ;; 打开spark streaming, receiverStream接收kafka消息流
-  (let [c (-> (conf/spark-conf)
-              (conf/app-name "flambo-custom-receiver-kafka-eample")
-              (conf/set "spark.akka.timeout" "1000")
-              (conf/set-executor-env env))
-        ssc (streaming/streaming-context c 10000)
+  (let [ssc (streaming/streaming-context c 10000)
         stream (.receiverStream ^JavaStreamingContext ssc (num-range-receiver (Integer/parseInt n)))]
     ;; 消息数据的流处理streaming/map, streaming/foreach-rdd. map fizzbuzz数据分析函数, foreach-rdd推送消息publish (partitions模式)
     (-> stream

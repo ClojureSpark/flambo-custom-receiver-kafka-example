@@ -1,4 +1,46 @@
 
+### 0. develop 最新版的spark2.2.0, 支持repl跑spark-submit
+* @clojurians-org: repl 跑必须加 ` (conf/master "local[*]") `
+```clojure
+(def c (-> (conf/spark-conf)
+           (conf/master "local[*]")
+           (conf/app-name "flambo-custom-receiver-kafka-eample")
+           (conf/set "spark.akka.timeout" "1000")
+           (conf/set-executor-env env)))
+```
+* run in repl
+```clojure
+flambo-example.core=> (-main "10")
+17/08/05 08:34:04 INFO core: Starting!
+17/08/05 08:34:11 INFO core: Starting receiver
+17/08/05 08:34:11 INFO core: Store: 1
+17/08/05 08:34:11 INFO core: Store: 2
+17/08/05 08:34:12 INFO core: Store: 3
+17/08/05 08:34:12 INFO core: Store: 4
+17/08/05 08:34:12 INFO core: Store: 5
+17/08/05 08:34:13 INFO core: Store: 6
+17/08/05 08:34:13 INFO core: Store: 7
+17/08/05 08:34:13 INFO core: Store: 8
+17/08/05 08:34:13 INFO core: Store: 9
+17/08/05 08:34:20 INFO core: ---->>> Sending to Kafka fizzbuzz [4 4] , class java.lang.String
+17/08/05 08:34:20 INFO core: ---->>> Sending to Kafka fizzbuzz [1 1] , class java.lang.String
+17/08/05 08:34:20 INFO core: ---->>> Sending to Kafka fizzbuzz [3 "Fizz"] , class java.lang.String
+17/08/05 08:34:20 INFO core: ---->>> Sending to Kafka fizzbuzz [2 2] , class java.lang.String
+17/08/05 08:34:20 INFO core: Metadata for  [3 "Fizz"]  is  {:offset 434, :partition 0, :topic "fizzbuzz"}
+17/08/05 08:34:20 INFO core: Metadata for  [4 4]  is  {:offset 431, :partition 0, :topic "fizzbuzz"}
+17/08/05 08:34:20 INFO core: Metadata for  [2 2]  is  {:offset 432, :partition 0, :topic "fizzbuzz"}
+17/08/05 08:34:20 INFO core: Metadata for  [1 1]  is  {:offset 433, :partition 0, :topic "fizzbuzz"}
+17/08/05 08:34:20 INFO core: ---->>> Sending to Kafka fizzbuzz [5 "Buzz"] , class java.lang.String
+17/08/05 08:34:20 INFO core: Metadata for  [5 "Buzz"]  is  {:offset 435, :partition 0, :topic "fizzbuzz"}
+17/08/05 08:34:20 INFO core: ---->>> Sending to Kafka fizzbuzz [8 8] , class java.lang.String
+17/08/05 08:34:20 INFO core: ---->>> Sending to Kafka fizzbuzz [9 "Fizz"] , class java.lang.String
+17/08/05 08:34:20 INFO core: Metadata for  [8 8]  is  {:offset 436, :partition 0, :topic "fizzbuzz"}
+17/08/05 08:34:20 INFO core: Metadata for  [9 "Fizz"]  is  {:offset 437, :partition 0, :topic "fizzbuzz"}
+17/08/05 08:34:20 INFO core: ---->>> Sending to Kafka fizzbuzz [6 "Fizz"] , class java.lang.String
+17/08/05 08:34:20 INFO core: ---->>> Sending to Kafka fizzbuzz [7 7] , class java.lang.String
+17/08/05 08:34:20 INFO core: Metadata for  [6 "Fizz"]  is  {:offset 438, :partition 0, :topic "fizzbuzz"}
+17/08/05 08:34:20 INFO core: Metadata for  [7 7]  is  {:offset 439, :partition 0, :topic "fizzbuzz"}
+```
 ### 1. start  zookeeper and kafka
 
 ```txt

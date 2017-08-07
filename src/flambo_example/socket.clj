@@ -9,8 +9,14 @@
            [org.apache.spark.storage StorageLevel]
            [org.apache.kafka.common.serialization StringSerializer]
            [org.apache.kafka.clients.producer KafkaProducer ProducerRecord Callback RecordMetadata]
-           #_[org.apache.spark.mllib.regression StreamingLinearRegressionWithSGD LabeledPoint]
-           [java.util Map])
+           [java.util Map]
+           [java.io PrintWriter]
+           [java.net ServerSocket]
+           ;; mllib
+           [breeze.linalg DenseVector]
+           [org.apache.spark.mllib.linalg Vectors]
+           [org.apache.spark.mllib.regression StreamingLinearRegressionWithSGD LabeledPoint]
+           [org.apache.spark.streaming Seconds StreamingContext])
   (:gen-class))
 
 (defn num-range-receiver

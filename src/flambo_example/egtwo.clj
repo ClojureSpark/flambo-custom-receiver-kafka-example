@@ -5,6 +5,8 @@
   #_(:require [clj-kafka.producer :as p]
             [clj-kafka.zk :as zk])
   (:require [clojure.string :as s])
+  (:import
+   [org.apache.spark.streaming.kafka KafkaUtils])
   (:gen-class))
 
 (def master "local[2]")

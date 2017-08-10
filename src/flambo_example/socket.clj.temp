@@ -74,7 +74,57 @@
     (.awaitTerminationOrTimeout ssc 90000)))
 
 ;; ------------>>> comment --->>>>>>>
-
 (def ssc (streaming/streaming-context c 10000))
 
 (def stream (.socketTextStream ssc "localhost" 9999))
+
+(def zero-data (into-array Double (repeat 100 0.0)))
+
+;; 大的流程打通了,小的细节用Clojure直接分析就行了 + R 语言
+#_(def model
+  (doto (StreamingLinearRegressionWithSGD.)
+    (.setInitialWeights (Vectors/dense 0.1 #_zero-data))
+    (.setNumIterations 1)
+    (.setStepSize 0.01)))
+
+(defn -main [& [n]]
+  (log/info "Starting!")
+  )
+
+#_(streaming/map stream (fn [event] (log/info event)))
+
+#_(api/defsparkfn fizzbuzz [x]
+  (log/info x))
+
+(api/defsparkfn fizzbuzz [x]
+  (let [r (cond
+            (zero? (mod x 15)) "FizzBuzz"
+            (zero? (mod x 5)) "Buzz"
+            (zero? (mod x 3)) "Fizz"
+            :else x)]
+    (str [x r])))
+
+(-> stream
+    (streaming/map fizzbuzz))
+
+(do
+  (.start ssc)
+  (.awaitTermination ssc)
+  )
+
+;;     // create a stream of labeled points
+;;     val labeledStream = stream.map { event =>
+;;       val split = event.split("\t")
+;;       val y = split(0).toDouble
+;;       val features = split(1).split(",").map(_.toDouble)
+;;       LabeledPoint(label = y, features = Vectors.dense(features))
+;;     }
+;; 
+;;     // train and test model on the stream, and print predictions for illustrative purposes
+;;     model.trainOn(labeledStream)
+;;     //model.predictOn(labeledStream).print()
+;;     model.predictOnValues(labeledStream.map(lp => (lp.label, lp.features))).print()
+;; 
+;;     ssc.start()
+;;     ssc.awaitTermination()
+;; 

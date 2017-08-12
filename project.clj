@@ -10,6 +10,7 @@
                  [org.apache.kafka/kafka-clients "0.10.1.1"]]
   :profiles {:provided {:dependencies
                         [[org.apache.spark/spark-core_2.11 "2.2.0"]]}}
+  :java-source-paths ["src/java"]
   :jar-name "flambo-example.jar"
   :uberjar-name "flambo-example-standalone.jar"
   :aot :all

@@ -1,4 +1,36 @@
 
+### 用Clojure和Java混合编译最易成功: 命令行发送消息 + Java处理分析
+
+```bash
+➜  ~ which k_g_msg
+k_g_msg: aliased to   /Users/clojure/SparkPro/kafka_2.11-0.11.0.0/bin/kafka-console-producer.sh --broker-list localhost:9092 --topic
+
+➜  ~ which k_list
+k_list: aliased to    /Users/clojure/SparkPro/kafka_2.11-0.11.0.0/bin/kafka-topics.sh --list --zookeeper localhost:2181
+
+➜  ~ k_list
+__consumer_offsets
+dashboard
+messages
+w4u_messages
+
+➜  ~ k_g_msg w4u_messages
+>我叫Steve桥布施
+>
+
+```
+
+```clojure
+flambo-example.zero=> (SparkStringConsumer/main (into-array String [""]))
+...
+17/08/12 10:07:09 INFO VerifiableProperties: Property zookeeper.connect is overridden to
+----------null===========我叫Steve桥布施
+17/08/12 10:07:09 INFO Executor: Finished task 0.0 in stage 1.0 (TID 1). 708 bytes result sent to driver
+...
+```
+
+# ----------------------------------------------------------------------
+
 ### 0. develop 最新版的spark2.2.0, 支持repl跑spark-submit
 * @clojurians-org: repl 跑必须加 ` (conf/master "local[*]") `
 ```clojure

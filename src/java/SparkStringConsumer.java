@@ -20,21 +20,21 @@ public class SparkStringConsumer {
     public static void main(String[] args) throws InterruptedException {
         SparkConf conf = new SparkConf()
                 .setAppName("Consumer")
-                .setMaster("local");
+                .setMaster("local[*]");
 
         try (JavaSparkContext context = new JavaSparkContext(conf);
              JavaStreamingContext streamingContext = new JavaStreamingContext(context, new Duration(1_000))) {
 
             Map<String, String> parameters = new HashMap<>();
-            parameters.put("metadata.broker.list", "sandbox.hortonworks.com:6667");
-            Set<String> topics = Collections.singleton("messages");
+            parameters.put("metadata.broker.list", "localhost:9092");
+            Set<String> topics = Collections.singleton("w4u_messages");
 
             JavaPairInputDStream<String, String> stream =
                     KafkaUtils.createDirectStream(streamingContext, String.class, String.class,
                             StringDecoder.class, StringDecoder.class, parameters, topics);
 
             stream.foreachRDD(rdd -> rdd.foreach(record -> {
-                System.out.println(record._1 + ": " + record._2);
+                System.out.println("----------" + record._1 + "===========" + record._2);
             }));
 
             streamingContext.start();

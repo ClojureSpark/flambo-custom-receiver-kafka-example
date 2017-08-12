@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+// Clojure Call: (SparkStringConsumer/main (into-array String ["11"]))
+
 public class SparkStringConsumer {
 
     public static void main(String[] args) throws InterruptedException {

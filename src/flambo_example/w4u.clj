@@ -10,6 +10,10 @@
            (org.apache.spark.streaming.api.java JavaPairInputDStream)
            (org.apache.spark.streaming.api.java JavaStreamingContext)
            (org.apache.spark.streaming.kafka KafkaUtils)
+           ;;
+           (kafka.producer Partitioner)
+           (kafka.utils VerifiableProperties)
+           ;;
            (java.util Collections)
            (java.util HashMap)
            (java.util Map)
@@ -59,7 +63,10 @@
                          ;; (.foreach rdd (fn [record] (log/info record)))
 
                          ;; Caused by: java.lang.NoSuchMethodException: java.lang.Class.<init>(kafka.utils.VerifiableProperties)
-                         ;; (api/foreach rdd (api/fn [x] x ))
+                         (api/foreach rdd (api/fn [x]
+                                            (log/info (str "*********" x "*****" ))
+                                            ;;x
+                                            ))
                          
                          )
                        )

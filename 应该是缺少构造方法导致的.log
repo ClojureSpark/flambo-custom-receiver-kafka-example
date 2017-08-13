@@ -1,0 +1,78 @@
+package ckm.kafka.producer;
+
+import kafka.producer.Partitioner;
+import kafka.utils.VerifiableProperties;
+
+/**
+ * Created by ckm on 2016/8/3.
+ */
+public class SimplePartitioner implements Partitioner {
+    /**
+     * 不写这个方法，会报错
+     * Exception in thread "main" java.lang.NoSuchMethodException: ckm.kafka.producer.SimplePartitioner.<init>(kafka.utils.VerifiableProperties)
+     * at java.lang.Class.getConstructor0(Class.java:2892)
+     * at java.lang.Class.getConstructor(Class.java:1723)
+     * at kafka.utils.Utils$.createObject(Utils.scala:436)
+     * at kafka.producer.Producer.<init>(Producer.scala:61)
+     * at kafka.javaapi.producer.Producer.<init>(Producer.scala:26)
+     * at ckm.kafka.producer.KafkaProducerWithPartition.<init>(KafkaProducerWithPartition.java:58)
+     * at ckm.kafka.producer.KafkaProducerWithPartition.main(KafkaProducerWithPartition.java:70)
+     * @param verifiableProperties
+     */
+    public SimplePartitioner(VerifiableProperties verifiableProperties) {
+
+    }
+
+    public int partition(Object key, int numPartitions) {
+        int partition = 0;
+        String partitionKey = (String) key;
+        int offset = partitionKey.lastIndexOf('.');
+        if (offset > 0) {
+            partition = Integer.parseInt(partitionKey.substring(offset + 1)) % numPartitions;
+        }
+        return partition;
+    }
+}
+
+
+
+##############
+
+
+原因是缺少构造方法
+[java] view plain copy
+
+	1.	com.bpbp.kafka.encoder.OrderEncoder  
+
+[java] view plain copy
+
+	1.	public class OrderEncoder implements kafka.serializer.Encoder<OrderData> {  
+	2.	    /** 
+	3.	     * 增加构造方法 
+	4.	     * @param verifiableProperties 
+	5.	     */  
+	6.	    public OrderEncoder(VerifiableProperties verifiableProperties){  
+	7.	  
+	8.	    }  
+	9.	    /** 
+	10.	     * 对象转字节 
+	11.	     * @param orderData 
+	12.	     * @return 
+	13.	     */  
+	14.	    public byte[] toBytes(OrderData orderData) {  
+	15.	        return BeanUtil.object2Bytes(orderData);  
+	16.	    }  
+	17.	
+
+
+
+ [org.apache.spark/spark-streaming-kafka_2.11 "1.6.3"]
+   [org.apache.kafka/kafka_2.11 "0.8.2.1" :exclusions [[com.sun.jmx/jmxri] [com.sun.jdmk/jmxtools] [net.sf.jopt-simple/jopt-simple] [org.slf4j/slf4j-simple] [org.apache.zookeeper/zookeeper]]]
+     [com.101tec/zkclient "0.3"]
+     [com.yammer.metrics/metrics-core "2.2.0"]
+     [org.apache.kafka/kafka-clients "0.8.2.1"]
+     [org.scala-lang.modules/scala-parser-combinators_2.11 "1.0.2"]
+     [org.scala-lang.modules/scala-xml_2.11 "1.0.2"]
+
+
+

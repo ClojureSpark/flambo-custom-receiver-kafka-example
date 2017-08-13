@@ -30,7 +30,7 @@
 
 (def stream (KafkaUtils/createDirectStream streaming-context (class String) (class String) (class StringDecoder) (class StringDecoder) parameters topics))
 
-(api/defsparkfn publish-using-partitions [rdd _]
+#_(api/defsparkfn publish-using-partitions [rdd _]
   (.foreachPartition
    rdd
    (function/void-function
@@ -41,7 +41,30 @@
         ;;
         )))))
 
-(-> stream
+(streaming/foreach-rdd stream
+                       (fn [rdd arg2]
+                         ;; clojure.lang.ArityException: Wrong number of args (2) passed to: w4u/fn--57
+                         ;; 17/08/13 18:06:26 INFO w4u: ----org.apache.spark.api.java.JavaPairRDD@6a270134===1502618786000 ms
+                         (log/info (str "----" rdd "===" arg2))
+
+                         #_(-> rdd #_(f/parallelize c [1 2 3 4 5])
+                             (api/foreach (api/fn [x]
+                                          (log/info (str "++++++" x "+++++"))
+                                            )))
+
+                         ;; java.lang.NoSuchMethodException: java.lang.Class.<init>(kafka.utils.VerifiableProperties)
+                         ;;(api/foreach rdd #())
+
+                         ;; java.lang.ClassCastException: Cannot cast flambo_example.w4u$fn__57$fn__58 to org.apache.spark.api.java.function.VoidFunction
+                         ;; (.foreach rdd (fn [record] (log/info record)))
+
+                         ;; Caused by: java.lang.NoSuchMethodException: java.lang.Class.<init>(kafka.utils.VerifiableProperties)
+                         ;; (api/foreach rdd (api/fn [x] x ))
+                         
+                         )
+                       )
+
+#_(-> stream
     (streaming/foreach-rdd publish-using-partitions))
 
 (.start streaming-context)

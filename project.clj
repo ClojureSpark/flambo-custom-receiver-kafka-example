@@ -14,4 +14,4 @@
   :jar-name "flambo-example.jar"
   :uberjar-name "flambo-example-standalone.jar"
   :aot :all
-  :main flambo-example.zero)
+  :main flambo-example.w4u)

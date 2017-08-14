@@ -50,7 +50,7 @@
                          ;; clojure.lang.ArityException: Wrong number of args (2) passed to: w4u/fn--57
                          ;; 17/08/13 18:06:26 INFO w4u: ----org.apache.spark.api.java.JavaPairRDD@6a270134===1502618786000 ms
                          (log/info (str "----" rdd "===" arg2))
-
+                         (import (kafka.utils VerifiableProperties)) ;; 加到这里都没用
                          #_(-> rdd #_(f/parallelize c [1 2 3 4 5])
                              (api/foreach (api/fn [x]
                                           (log/info (str "++++++" x "+++++"))

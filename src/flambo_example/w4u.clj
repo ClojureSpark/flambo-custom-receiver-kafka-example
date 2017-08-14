@@ -4,9 +4,7 @@
             [flambo.function :as function]
             [flambo.streaming :as streaming]
             [clojure.tools.logging :as log])
-  (:import (kafka.producer Partitioner)
-           (kafka.utils VerifiableProperties)
-           (kafka.serializer StringDecoder)
+  (:import (kafka.serializer StringDecoder)
            (org.apache.spark.api.java JavaSparkContext)
            (org.apache.spark.streaming Duration)
            (org.apache.spark.streaming.api.java JavaPairInputDStream)

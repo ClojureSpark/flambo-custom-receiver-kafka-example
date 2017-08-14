@@ -25,7 +25,7 @@
         streaming-context (JavaStreamingContext. context (Duration. 1000))
         parameters (HashMap. {"metadata.broker.list" "localhost:9092"})
         topics (Collections/singleton "w4u_messages")
-        stream (KafkaUtils/createDirectStream streaming-context (class String) (class String) (class StringDecoder) (class StringDecoder) parameters topics)]
+        stream (streaming/kafka-direct-stream streaming-context String String StringDecoder StringDecoder parameters topics)]
     (streaming/foreach-rdd
      stream
      (fn [rdd arg2]

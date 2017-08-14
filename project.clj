@@ -6,7 +6,8 @@
                  [org.apache.spark/spark-streaming_2.11 "2.2.0"]
                  [org.apache.spark/spark-streaming-kafka_2.11 "1.6.3"]
                  [org.apache.spark/spark-streaming-flume_2.11 "2.2.0"]
-                 [org.apache.spark/spark-mllib_2.11 "2.2.0"]]
+                 [org.apache.spark/spark-mllib_2.11 "2.2.0"]
+                 [org.apache.kafka/kafka-clients "0.10.1.1"]]
   :profiles {:provided {:dependencies
                         [[org.apache.spark/spark-core_2.11 "2.2.0"]]}}
   :java-source-paths ["src/java"]

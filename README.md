@@ -28,7 +28,19 @@ flambo-example.zero=> (SparkStringConsumer/main (into-array String [""]))
 17/08/12 10:07:09 INFO Executor: Finished task 0.0 in stage 1.0 (TID 1). 708 bytes result sent to driver
 ...
 ```
+### Spark和Clojure互操作: 看flambo源码,涉及闭包会更复杂一点
 
+```clojure
+;; w4u.clj 重写 SparkStringConsumer.java ok
+flambo-example.w4u=> (-main 1)
+17/08/14 11:41:54 INFO w4u: =====org.apache.spark.api.java.JavaPairRDD@5b8f6c34=====1502682114000 ms
+17/08/14 11:42:00 INFO KafkaRDD: Computing topic w4u_messages, partition 0 offsets 46 -> 47
+17/08/14 11:42:00 INFO VerifiableProperties: Verifying properties
+17/08/14 11:42:00 INFO VerifiableProperties: Property group.id is overridden to
+17/08/14 11:42:00 INFO VerifiableProperties: Property zookeeper.connect is overridden to
+17/08/14 11:42:00 INFO w4u: *********(null,乔布斯)*****
+17/08/14 11:42:00 INFO Executor: Finished task 0.0 in stage 6.0 (TID 6). 666 bytes result sent to driver
+```
 # ----------------------------------------------------------------------
 
 ### 0. develop 最新版的spark2.2.0, 支持repl跑spark-submit
